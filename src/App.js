@@ -6,12 +6,10 @@ import { useSearchParams,Link, Route, Routes} from 'react-router-dom'
 
 const App =  () => {
    return(
-    // <Router>
         <Routes>
             <Route exact path="/" element={<Meeting />}/>
             <Route path="/signout" element={<SignOut />}/>
         </Routes>
-    // </Router>
    )
 }
 
@@ -28,19 +26,12 @@ const Meeting = () => {
         setRoomName(getValue("meetingname"));
         setUserType(getValue("usertype"));
     })
-
-    console.log(displayName ,'\n', roomName, '\n', usertype)
     return (
         <div>
-          <div>
-            <p className='p-5'>{roomName.toLocaleUpperCase()}</p>
-          </div>
-
           {
             roomName && (
                 <JitsiMeeting
-                // domain = { YOUR_DOMAIN }
-                roomName = {roomName}
+                roomName = {"ism cell conferencing "+roomName}
 
                 configOverwrite = {{
                     startWithAudioMuted: true,
@@ -48,11 +39,18 @@ const Meeting = () => {
                     startScreenSharing: true,
                     enableEmailInStats: false,
                     enableAudioDetection: false,
-                    toolbarButtons: ['microphone', 'camera', 'chat']
+                    toolbarButtons: ['microphone', 'camera', 'chat'],
+                    disableDeepLinking : true,
+                    logoImageUrl: 'https://peachy.com.ng/logo.png'
                 }}
+
                 interfaceConfigOverwrite = {{
                     DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-                    disableDeepLinking : true
+                    MOBILE_APP_PROMO: false,
+                    SHOW_JITSI_WATERMARK: false,
+                    HIDE_DEEP_LINKING_LOGO: true,
+                    SHOW_BRAND_WATERMARK: false,
+                    SHOW_WATERMARK_FOR_GUESTS: false
                 }}
                 userInfo = {{
                     displayName: displayName,
@@ -64,7 +62,7 @@ const Meeting = () => {
                     externalApi.on('readyToClose', () => window.alert("Meeting ended!"))
                 } }
             
-                getIFrameRef = { (iframeRef) => { iframeRef.style.height = '600px'; } }
+                getIFrameRef = { (iframeRef) => { iframeRef.style.height = '90vh'; } }
             />
             )
           }
@@ -72,8 +70,7 @@ const Meeting = () => {
             <div className='footer p-5'>
                 <Link to="/signout">
                 <button
-                className='bg-red-600 text-white rounded p-5 w-full font-bold'>Leave Call</button>
-            
+                  className='bg-red-600 text-white rounded p-5 w-full font-bold font-[nunito]'>Leave Call</button>
                 </Link>
                 </div>
 
