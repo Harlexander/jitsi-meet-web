@@ -58,7 +58,7 @@ const Meeting = () => {
                 onApiReady = { (externalApi) => {
                     // here you can attach custom event listeners to the Jitsi Meet External API
                     // you can also store it locally to execute commands
-                    externalApi.addListener('readyToClose', () => window.alert("Meeting ended"))
+                    externalApi.on("videoConferenceJoined", () => window.alert("meeting started"))
                     externalApi.on('readyToClose', () => window.alert("Meeting ended!"))
                 } }
             
