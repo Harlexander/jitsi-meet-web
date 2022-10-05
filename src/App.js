@@ -3,6 +3,7 @@ import Loader from './component/Loader/Loader'
 import './App.css'
 import { JitsiMeeting } from '@jitsi/react-sdk'
 import { useSearchParams,Link, Route, Routes} from 'react-router-dom'
+import axios from 'axios'
 
 const App =  () => {
    return(
@@ -17,7 +18,8 @@ const Meeting = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [displayName, setDisplayName] = useState('')
     const [roomName, setRoomName] = useState('')
-    const [usertype, setUserType] = useState(false)
+    const [usertype, setUserType] = useState('')
+    const [cellname, setCellname] = useState('')
 
     const getValue = (val) => {return searchParams.get(val)};
 
@@ -25,11 +27,31 @@ const Meeting = () => {
         setDisplayName(getValue("displayname"));
         setRoomName(getValue("meetingname"));
         setUserType(getValue("usertype"));
+        setCellname(getValue("cellname"));
     })
+
+    const sendNotification = async () => {
+        try {
+            const body = {
+                title : roomName,
+                cell_name : cellname
+            }
+    
+            if(cellname && roomName){
+               const send = await axios.post('https://d649-102-89-43-246.eu.ngrok.io/api/notify/reminder', body)
+               const res = send.data;
+               console.log(res)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        
+    }
+
     return (
         <div>
           {
-            roomName && (
+            (roomName && cellname) && (
                 <JitsiMeeting
                 roomName = {"ism cell conferencing "+roomName}
 
@@ -58,7 +80,7 @@ const Meeting = () => {
                 onApiReady = { (externalApi) => {
                     // here you can attach custom event listeners to the Jitsi Meet External API
                     // you can also store it locally to execute commands
-                    externalApi.on("videoConferenceJoined", () => window.alert("meeting started"))
+                    externalApi.on("videoConferenceJoined", () => sendNotification())
                     externalApi.on('readyToClose', () => window.alert("Meeting ended!"))
                 } }
             
@@ -66,14 +88,17 @@ const Meeting = () => {
             />
             )
           }
-
-            <div className='footer p-5'>
-                <Link to="/signout">
-                <button
-                  className='bg-red-600 text-white rounded p-5 w-full font-bold font-[nunito]'>Leave Call</button>
-                </Link>
-                </div>
-
+            {
+                (roomName && cellname) && (
+                    <div className='footer p-5'>
+                        <Link to="/signout">
+                        <button
+                        className='bg-red-600 text-white rounded p-5 w-full font-bold font-[nunito]'>Leave Call</button>
+                        </Link>
+                    </div>
+                )
+            }
+            
         </div>
     )
 }
