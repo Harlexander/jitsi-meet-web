@@ -37,15 +37,31 @@ const Meeting = () => {
                 cell_name : cellname
             }
     
+            const send = await axios.post('https://4c19-105-112-164-122.eu.ngrok.io/api/notify/reminder', body)
+           
+            return send.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const startMeeting = async () => {
+        try {
+            console.log("joined")
+            const body = {
+                meetingname : roomName,
+                cellname : cellname,
+                host : displayName
+            }
+
             if(cellname && roomName){
-               const send = await axios.post('https://d649-102-89-43-246.eu.ngrok.io/api/notify/reminder', body)
-               const res = send.data;
-               console.log(res)
+               const send = await axios.post('https://4c19-105-112-164-122.eu.ngrok.io/api/meeting/start-meeting', body)               
+               const pushNotification = await sendNotification()
+               console.log(pushNotification)
             }
         } catch (error) {
             console.log(error)
         }
-        
     }
 
     return (
@@ -53,7 +69,8 @@ const Meeting = () => {
           {
             (roomName && cellname) && (
                 <JitsiMeeting
-                roomName = {"ism cell conferencing "+roomName}
+                domain = { "meet.peachy.com.ng" }
+                roomName = {cellname+ "_" +roomName}
 
                 configOverwrite = {{
                     startWithAudioMuted: true,
@@ -61,7 +78,6 @@ const Meeting = () => {
                     startScreenSharing: true,
                     enableEmailInStats: false,
                     enableAudioDetection: false,
-                    toolbarButtons: ['microphone', 'camera', 'chat'],
                     disableDeepLinking : true,
                     logoImageUrl: 'https://peachy.com.ng/logo.png'
                 }}
@@ -72,23 +88,23 @@ const Meeting = () => {
                     SHOW_JITSI_WATERMARK: false,
                     HIDE_DEEP_LINKING_LOGO: true,
                     SHOW_BRAND_WATERMARK: false,
-                    SHOW_WATERMARK_FOR_GUESTS: false
+                    SHOW_WATERMARK_FOR_GUESTS: false,
+                    SHOW_JITSI_WATERMARK : false
                 }}
                 userInfo = {{
                     displayName: displayName,
                 }}
-                onApiReady = { (externalApi) => {
-                    // here you can attach custom event listeners to the Jitsi Meet External API
-                    // you can also store it locally to execute commands
-                    externalApi.on("videoConferenceJoined", () => sendNotification())
-                    externalApi.on('readyToClose', () => window.alert("Meeting ended!"))
+                
+                onApiReady = { (externalApi)  => {
+                    externalApi.on("videoConferenceJoined", () => startMeeting())
+                    externalApi.on('readyToClose', () => console.log("Meeting ended!"))
                 } }
             
-                getIFrameRef = { (iframeRef) => { iframeRef.style.height = '90vh'; } }
+                getIFrameRef = { (iframeRef) => { iframeRef.style.height = '100vh'; } }
             />
             )
           }
-            {
+            {/* {
                 (roomName && cellname) && (
                     <div className='footer p-5'>
                         <Link to="/signout">
@@ -98,7 +114,7 @@ const Meeting = () => {
                     </div>
                 )
             }
-            
+             */}
         </div>
     )
 }
