@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Loader from './component/Loader/Loader'
 import './App.css'
 import { JitsiMeeting } from '@jitsi/react-sdk'
 import { useSearchParams,Link, Route, Routes} from 'react-router-dom'
@@ -88,15 +87,14 @@ const Meeting = () => {
                     SHOW_JITSI_WATERMARK: false,
                     HIDE_DEEP_LINKING_LOGO: true,
                     SHOW_BRAND_WATERMARK: false,
-                    SHOW_WATERMARK_FOR_GUESTS: false,
-                    SHOW_JITSI_WATERMARK : false
+                    SHOW_WATERMARK_FOR_GUESTS: false
                 }}
                 userInfo = {{
                     displayName: displayName,
                 }}
                 
                 onApiReady = { (externalApi)  => {
-                    externalApi.on("videoConferenceJoined", () => startMeeting())
+                    externalApi.on("videoConferenceJoined", () => {usertype === "admin" && startMeeting()})
                     externalApi.on('readyToClose', () => console.log("Meeting ended!"))
                 } }
             
