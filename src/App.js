@@ -36,7 +36,7 @@ const Meeting = () => {
                 cell_name : cellname
             }
     
-            const send = await axios.post('https://4c19-105-112-164-122.eu.ngrok.io/api/notify/reminder', body)
+            const send = await axios.post('https://crp-api.christembassy-ism.com/api/notify/reminder', body)
            
             return send.data
         } catch (error) {
@@ -54,7 +54,7 @@ const Meeting = () => {
             }
 
             if(cellname && roomName){
-               const send = await axios.post('https://4c19-105-112-164-122.eu.ngrok.io/api/meeting/start-meeting', body)               
+               const send = await axios.post('https://crp-api.christembassy-ism.com/api/meeting/start-meeting', body)               
                const pushNotification = await sendNotification()
                console.log(pushNotification)
             }
