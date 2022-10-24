@@ -35,9 +35,7 @@ const Meeting = () => {
                 title : roomName,
                 cell_name : cellname
             }
-    
             const send = await axios.post('https://crp-api.christembassy-ism.com/api/notify/reminder', body)
-           
             return send.data
         } catch (error) {
             console.log(error)
@@ -102,17 +100,6 @@ const Meeting = () => {
             />
             )
           }
-            {/* {
-                (roomName && cellname) && (
-                    <div className='footer p-5'>
-                        <Link to="/signout">
-                        <button
-                        className='bg-red-600 text-white rounded p-5 w-full font-bold font-[nunito]'>Leave Call</button>
-                        </Link>
-                    </div>
-                )
-            }
-             */}
         </div>
     )
 }
