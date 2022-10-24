@@ -68,7 +68,7 @@ const Meeting = () => {
           {
             (roomName && cellname) && (
                 <JitsiMeeting
-                domain = { "meet.peachy.com.ng" }
+                domain = { "conferencing.christembassy-ism.com" }
                 roomName = {cellname+ "_" +roomName}
 
                 configOverwrite = {{
